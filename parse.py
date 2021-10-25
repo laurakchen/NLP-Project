@@ -30,30 +30,47 @@ newtext = sent_tokenize(text1)
 
 nlp = spacy.load('en_core_web_sm')
 
-tag_dict = dict()
+NER_tag_dict = dict()
+POS_tag_dict = dict()
 
-def tag1():
+def tag1(text1):
 	tags = []
 	doc = nlp(text1)
 	for ent in doc.ents:
 	# print(ent.text +'-' + ent.label_ + '\n')
-		tags.append(ent.text +'-' + ent.label_)
-	return tags
+		NER_tags.append(ent.text +'-' + ent.label_)
+	
 
-def tag2():
+def tag2(text):
 	for i,line in enumerate(text):
 		tags = []
 		doc = nlp(str(line))
+
 		for ent in doc.ents:
 			# print(ent.text +'-' + ent.label_ + '\n')
 			tags.append(ent.text +'-' + ent.label_)
 		if len(tags) != 0:
-			tag_dict[i] = tags
-
-	return tag_dict
+			NER_tag_dict[i] = tags
 
 
-print(tag2())
+def pos_tag(text):
+	for i,line in enumerate(text):
+		tags = []
+		doc = nlp(str(line))
+		for token in doc:
+		    tags.append((token.text, token.pos_, token.tag_, token.dep_, token.is_stop))
+		if len(tags) != 0:
+			POS_tag_dict[i] = tags
+
+
+doc1 = nlp("Autonomous cars shift insurance liability toward manufacturers")
+for token in doc1:
+    print(token.text, token.dep_, token.head.text, token.head.pos_,
+            [child for child in token.children])
+
+# print(tag2(text))
+# pos_tag(text)
+# print(POS_tag_dict[1])
 
 
 
