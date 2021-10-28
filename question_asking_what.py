@@ -121,11 +121,13 @@ def whatQ(sentence, dep_dict, root):
 	output = ''
 	if root in aux_verbs:
 		output += f"What {root} "
+		seenRoot = False
 		for n in sentence.split():
 			if n == root:
-				break
-			output += n + " "
-		return output[:-1] + "?"
+				seenRoot = True
+			elif seenRoot:
+				output += n + " "
+		return output[:-2] + "?"
 	else:
 		pos_tags = pos_tag_sentence(sentence)
 		lemmas = getTokenLemma(nlp(sentence))
