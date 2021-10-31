@@ -15,7 +15,7 @@
     <session id="564332022">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="3" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.6" value="1" />
@@ -25,23 +25,25 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="ipynb" value="1" />
+          <entry key="java" value="1" />
           <entry key="py" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="IPNB" value="1" />
+          <entry key="PLAIN_TEXT" value="1" />
           <entry key="Python" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="1818" />
+          <entry key="py" value="1873" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="1818" />
+          <entry key="Python" value="1873" />
         </counts>
       </usages-collector>
     </session>
@@ -51,12 +53,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/question_asking_what.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="161" column="25" lean-forward="true" selection-start-line="161" selection-start-column="25" selection-end-line="161" selection-end-column="25" />
+            <state relative-caret-position="609">
+              <caret line="149" column="36" lean-forward="true" selection-start-line="149" selection-start-column="36" selection-end-line="149" selection-end-column="36" />
               <folding>
                 <element signature="e#1#12#0" expanded="true" />
-                <marker date="1635384295157" expanded="true" signature="2706:2782" ph="..." />
-                <marker date="1635384295157" expanded="true" signature="3007:3009" ph="..." />
+                <marker date="1635385039340" expanded="true" signature="2706:2782" ph="..." />
+                <marker date="1635385039340" expanded="true" signature="3007:3009" ph="..." />
               </folding>
             </state>
           </provider>
@@ -196,7 +198,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32891566" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32891566" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -235,14 +237,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../../17683/Labs/lab2/LinkedListLab.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="28" column="38" lean-forward="true" selection-start-line="28" selection-start-column="38" selection-end-line="28" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/question_asking_what.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="161" column="25" lean-forward="true" selection-start-line="161" selection-start-column="25" selection-end-line="161" selection-end-column="25" />
+        <state relative-caret-position="609">
+          <caret line="149" column="36" lean-forward="true" selection-start-line="149" selection-start-column="36" selection-end-line="149" selection-end-column="36" />
           <folding>
             <element signature="e#1#12#0" expanded="true" />
-            <marker date="1635384295157" expanded="true" signature="2706:2782" ph="..." />
-            <marker date="1635384295157" expanded="true" signature="3007:3009" ph="..." />
+            <marker date="1635385039340" expanded="true" signature="2706:2782" ph="..." />
+            <marker date="1635385039340" expanded="true" signature="3007:3009" ph="..." />
           </folding>
         </state>
       </provider>
