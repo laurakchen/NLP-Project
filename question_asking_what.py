@@ -7,17 +7,6 @@ nlp = spacy.load('en_core_web_sm')
 lemmatizer = WordNetLemmatizer()
 textfile = "data/set4/a7.txt"
 
-sentence1 = "Harry Potter and the Prisoner of Azkaban is a 2004 fantasy film directed by Alfonso Cuarón and distributed by Warner Bros."
-sentence2 = "Harry Potter has been spending another unhappy summer with the Dursleys."
-sentence3 = "The film was produced by La Petite Reine and ARP Sélection for 13.47 million dollars."
-sentence4 = "The film took them 13.47 million dollars."
-
-
-# doc1 = nlp(sentence1)
-# doc2 = nlp(sentence2)
-# doc3 = nlp(sentence3)
-# doc4 = nlp(sentence4)
-
 #put entire text file into a list of sentences
 text = []
 with open(textfile, "r") as f:
@@ -157,6 +146,38 @@ def whatQ(sentence, dep_dict, root):
 		output = output[:-1] + "?"
 		return output
 
+# where question that includes 'where' in sentence
+def whereQ(sentence, dep_dict, root):
+	output = ''
+	verbs = ['was', 'is', 'were']
+	foundVerb = False
+	foundVerbInd = 0
+	# find tense
+	pos_tags = pos_tag_sentence(sentence)
+	foundWhereInd = 0
+	whereInd = 0
+	tense = None
+	for word in sentence.split():
+		if word == 'where':
+			foundWhereInd = whereInd
+			verb = dep_dict[word][1]
+			if pos_tags[verb][0] == 'VERB':
+				tense = check_tense(verb, pos_tags)
+			elif verb in verbs: # if tense is was, is, were
+				tense = verb
+				foundVerb = True
+				foundVerbInd = sentence.split().index(verb)
+			break
+		whereInd += 1
+	if tense == None: # not able to create question from sentence
+		return "No question"
+	output += f'Where {tense} '
+	ind = foundWhereInd
+	if foundVerb:
+		ind = foundVerbInd
+	for word in sentence.split()[ind+1:]:
+		output += word + " "
+	return output[:-2] + "?"
 
 # test cases
 test_sentence1 = "Harry Potter and The Prisoner of Azkaban is a 2004 fantasy film."
