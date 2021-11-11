@@ -11,10 +11,11 @@ class Parser(object):
 	def __init__(self, textFile):
 		self.textFile = textFile
 		self.nlp = spacy.load('en_core_web_sm')
-		self.lemmatizer = WordNetLemmatizer()
+		# self.lemmatizer = WordNetLemmatizer()
 		self.text = []
-		with open(self.textFile, "r") as f:
+		with open(self.textFile) as f:
 			for line in f:
+				print(line)
 				line = line.split('. ')
 				if len(line) != 0:
 					temp = line[0].strip('\n')

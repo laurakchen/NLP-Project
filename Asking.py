@@ -17,7 +17,7 @@ class Asking(object):
 		self.parser = Parser.Parser(self.textFile)
 
 	# input: a single sentence, with its dependency dict and root word
-	def binaryQ(self, sentence, token_dict, root):
+	def binaryQ(self, sentence, root):
 		output = ''
 		if root in self.auxiliary_verbs:
 			output += root.capitalize() + ' '
@@ -98,7 +98,7 @@ class Asking(object):
 
 	def howManyQ(self, sentence, ner_tag_dict, dependency_dict, pos_tag_sentence,
 				 root):
-		token_Dict, root = self.parser.dependency_dict(self.nlp(sentence))
+		# dependency_dict, root = self.parser.dependency_dict(self.nlp(sentence))
 		Number = ""
 		output = ""
 		clause = ""
@@ -119,7 +119,7 @@ class Asking(object):
 			if root_ind != 0:
 				word_in_front_of_root = sentence_lst[root_ind - 1]
 				# if it's passive tense
-				if token_Dict[word_in_front_of_root][0] == 'auxpass':
+				if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 					middle = clause[clause.find(root): clause.find(Number)]
 					output = "How many" + clause.split(Number, 1)[1][
 										  :-1] + " " + word_in_front_of_root + " " + \
@@ -148,7 +148,7 @@ class Asking(object):
 
 	def howOftenQ(self, sentence, ner_tag_dict, dependency_dict, pos_tag_sentence,
 				  root):
-		token_Dict, root = self.parser.dependency_dict(self.nlp(sentence))
+		# dependency_dict, root = self.parser.dependency_dict(self.nlp(sentence))
 		date = ""
 		output = ""
 		clause = ""
@@ -164,7 +164,7 @@ class Asking(object):
 		date_ind = sentence.index(date)
 		if date_ind < root_ind:
 			word_in_front_of_root = sentence_lst[root_lst_ind - 1]
-			if token_Dict[word_in_front_of_root][0] == 'auxpass':
+			if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 				sentence_lst[root_lst_ind - 1] = sentence_lst[root_lst_ind - 2]
 				sentence_lst[root_lst_ind - 2] = word_in_front_of_root
 			else:
@@ -183,10 +183,10 @@ class Asking(object):
 				word_in_front_of_root = sentence_lst[root_lst_ind - 1]
 				word_after_root = sentence_lst[root_lst_ind + 1]
 				prep_ind = sentence.index(word_after_root)
-				if token_Dict[word_after_root][
+				if dependency_dict[word_after_root][
 					0] != 'prep': word_after_root = ""
 				# if it's passive tense
-				if token_Dict[word_in_front_of_root][0] == 'auxpass':
+				if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 					output = "How long " + word_in_front_of_root + " " + \
 							 clause.split(word_in_front_of_root, 1)[
 								 0].lower() + sentence[root_ind:prep_ind + len(
@@ -269,13 +269,13 @@ class Asking(object):
 					root_ind].lemma_ + " " + theObj + "?"
 		return output
 
-	def whereQ(self, sentence, dep_dict, root):
+	def whereQ(self, sentence, dep_dict, pos_tags):
 		output = ''
 		verbs = ['was', 'is', 'were']
 		foundVerb = False
 		foundVerbInd = 0
 		# find tense
-		pos_tags = self.parser.pos_tag_sentence(sentence)
+		# pos_tags = self.parser.pos_tag_sentence(sentence)
 		seenWhere = False
 		foundWhereInd = 0
 		whereInd = 0
@@ -304,7 +304,7 @@ class Asking(object):
 		return output[:-2] + "?"
 
 	# what Question
-	def whatQ(self, sentence, dep_dict, root):
+	def whatQ(self, sentence, dep_dict, root, pos_tags, lemmas):
 		aux_verbs = ["are", "is", "was", "were", "shall", "do", "does", "did",
 					 "can", "could", "have", "need", "should", "will", "would",
 					 "must", "may", "might", "cannot"]
@@ -319,8 +319,8 @@ class Asking(object):
 					output += n + " "
 			return output[:-2] + "?"
 		else:
-			pos_tags = self.parser.pos_tag_sentence(sentence)
-			lemmas = self.parser.getTokenLemma(self.nlp(sentence))
+			# pos_tags = self.parser.pos_tag_sentence(sentence)
+			# lemmas = self.parser.getTokenLemma(self.nlp(sentence))
 			verb_tense = self.parser.check_tense(root, pos_tags)
 			if verb_tense != None:
 				output += f"What {verb_tense} "
@@ -348,7 +348,7 @@ class Asking(object):
 			output = output[:-1] + "?"
 			return output
 
-	def whenQ(self, sentence, ner_tag_dict, dependency_dict, root, doc, pos_dict):
+	def whenQ(self, sentence, ner_tag_dict, root, doc, pos_dict):
 		# find DATE/TIME tag
 		theDateTime = ''
 		theVerb = ''
