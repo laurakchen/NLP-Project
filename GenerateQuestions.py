@@ -20,7 +20,6 @@ class GenerateQuestions(object):
 			pos_tags = self.parser.pos_tag_sentence(sentence)
 			token_dict, root = self.parser.dependency_dict(nlp_doc)
 			ner_tags = self.parser.ner_tag_sentence(sentence)
-			# verb_tense = self.parser.check_tense(root, pos_tags)
 			lemma_dict = self.parser.getTokenLemma(nlp_doc)
 			how_many_output = self.asker.howManyQ(sentence, ner_tags, token_dict,
 							pos_tags, root)

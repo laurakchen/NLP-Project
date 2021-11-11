@@ -1,27 +1,22 @@
 import nltk
 from nltk.tokenize import sent_tokenize
 import spacy
-from nltk.stem import WordNetLemmatizer
-from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-from nltk.corpus import wordnet
 
 class Parser(object):
 
 	def __init__(self, textFile):
-		self.textFile = textFile
 		self.nlp = spacy.load('en_core_web_sm')
-		# self.lemmatizer = WordNetLemmatizer()
-		self.text = []
-		with open(self.textFile) as f:
+		# put entire text file into a list of sentences
+		self.text = self.get_text(textFile)
+
+	def get_text(self, textFile):
+		text = []
+		with open(textFile, "r") as f:
 			for line in f:
 				print(line)
-				line = line.split('. ')
-				if len(line) != 0:
-					temp = line[0].strip('\n')
-					if len(temp) != 0:
-						self.text.append(temp)
-		# self.nlp_doc = self.nlp(self.text)
+				text = text + sent_tokenize(line)
+		return text
 
 	def pos_tag_lst(self, text):
 		# list of sentences
@@ -51,7 +46,7 @@ class Parser(object):
 		return POS_tag_dict
 
 	# Token dict
-	def dependency_dict(doc):
+	def dependency_dict(self, doc):
 		out = dict()
 		root = ''
 		for token in doc:
@@ -85,7 +80,7 @@ class Parser(object):
 		return NER_tag_dict
 
 	# check tense of verb
-	def check_tense(root, pos_dict):
+	def check_tense(self, root, pos_dict):
 		tag = pos_dict[root][1]
 		if tag == "VB":
 			return "do"
@@ -103,7 +98,7 @@ class Parser(object):
 			return None
 
 	# return dictionary of lemmas in sentence
-	def getTokenLemma(nlp_doc):
+	def getTokenLemma(self, nlp_doc):
 		lemmas = {}
 		for token in nlp_doc:
 			lemmas[str(token)] = token.lemma_
