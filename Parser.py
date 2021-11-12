@@ -45,6 +45,20 @@ class Parser(object):
 				POS_tag_dict[token.text] = tags[0]
 		return POS_tag_dict
 
+	# def pos_tag_sentence(self, sentence):
+	# 	# list of sentences
+	# 	POS_tag_dict = dict()
+	# 	text = sentence.split()
+	# 	for i, line in enumerate(text):
+	# 		tags = []
+	# 		doc = self.nlp(str(line))
+	# 		for token in doc:
+	# 			tags.append((token.text, token.pos_, token.tag_, token.dep_,
+	# 						 token.is_stop,))
+	# 		if len(tags) != 0:
+	# 			POS_tag_dict[i] = tags
+	# 	return POS_tag_dict
+
 	# Token dict
 	def dependency_dict(self, doc):
 		out = dict()
