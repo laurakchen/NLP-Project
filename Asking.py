@@ -130,7 +130,7 @@ class Asking(object):
 					verb = clause[
 						   clause.find(root): clause.find(root) + len(root)]
 					# if it's past tense
-					if pos_tag_sentence(root)[0][0][2] in ("VBD", "VBN"):
+					if self.parser.pos_tag_sentence(root)[root][1] in ("VBD", "VBN"):
 						output = "How many" + clause.split(Number, 1)[1][
 											  :-1] + " did " + \
 								 clause.split(Number, 1)[0][0].lower() + \
@@ -148,7 +148,6 @@ class Asking(object):
 
 	def howOftenQ(self, sentence, ner_tag_dict, dependency_dict, pos_tag_sentence,
 				  root):
-		# dependency_dict, root = self.parser.dependency_dict(self.nlp(sentence))
 		date = ""
 		output = ""
 		clause = ""
@@ -169,7 +168,7 @@ class Asking(object):
 				sentence_lst[root_lst_ind - 2] = word_in_front_of_root
 			else:
 				sentence_lst[root_lst_ind] = self.nlp(root)[0].lemma_
-				if pos_tag_sentence(root)[0][0][2] in ("VBD", "VBN"):
+				if self.parser.pos_tag_sentence(root)[root][1] in ("VBD", "VBN"):
 					sentence_lst.insert(root_lst_ind - 1, "did")
 				else:
 					sentence_lst.insert(root_lst_ind - 1, "does")
@@ -193,7 +192,7 @@ class Asking(object):
 						word_after_root)]
 				else:
 					# if it's past tense
-					if pos_tag_sentence(root)[0][0][2] in ("VBD", "VBN"):
+					if self.parser.pos_tag_sentence(root)[root][1] in ("VBD", "VBN"):
 						output = "How long" + " did " + clause.split(root, 1)[
 							0].lower() + self.nlp(root)[0].lemma_ + sentence[
 															   root_ind + len(
@@ -275,7 +274,6 @@ class Asking(object):
 		foundVerb = False
 		foundVerbInd = 0
 		# find tense
-		# pos_tags = self.parser.pos_tag_sentence(sentence)
 		seenWhere = False
 		foundWhereInd = 0
 		whereInd = 0
@@ -294,7 +292,7 @@ class Asking(object):
 				break
 			whereInd += 1
 		if tense == None:  # not able to create question from sentence
-			return "No question"
+			return ""
 		output += f'Where {tense} '
 		ind = foundWhereInd
 		if foundVerb:
@@ -338,8 +336,7 @@ class Asking(object):
 			post_root_nouns = []
 			for pos in pos_tags:
 				if pos != root and pos != nsubj_word:
-					if pos_tags[pos][0] == "NOUN" or pos_tags[pos][
-						0] == "PROPN":
+					if pos_tags[pos][0] == "NOUN" or pos_tags[pos][0] == "PROPN":
 						post_root_nouns.append(pos)
 						break
 			# add nouns/propositions after root
@@ -363,8 +360,8 @@ class Asking(object):
 		prep = ['in ', 'on ']
 		for p in prep: sentence = sentence.replace(p, '')
 		for k in pos_dict.keys():
-			if pos_dict[k][0][1] == 'AUX':
-				aux = pos_dict[k][0][0]
+			if pos_dict[k][0] == 'AUX':
+				aux = k
 		if aux == '':
 			theVerb = root_token.lemma_
 			output = 'When '

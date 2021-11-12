@@ -8,8 +8,6 @@ class GenerateQuestions(object):
 		self.nlp = spacy.load('en_core_web_sm')
 		self.asker = Asking.Asking(textfile)
 		self.parser = Parser.Parser(textfile)
-		self.POS_tag_dict = self.parser.pos_tag_lst(self.parser.text)
-		self.ner_tags = self.parser.ner_tag(self.parser.text)
 		print("done with initializing")
 
 	def generateQuestions(self, limit):
@@ -20,8 +18,9 @@ class GenerateQuestions(object):
 			pos_tags = self.parser.pos_tag_sentence(sentence)
 			token_dict, root = self.parser.dependency_dict(nlp_doc)
 			ner_tags = self.parser.ner_tag_sentence(sentence)
-			# verb_tense = self.parser.check_tense(root, pos_tags)
 			lemma_dict = self.parser.getTokenLemma(nlp_doc)
+
+			# generate question outputs
 			how_many_output = self.asker.howManyQ(sentence, ner_tags, token_dict,
 							pos_tags, root)
 			binary_output = self.asker.binaryQ(sentence, root)
