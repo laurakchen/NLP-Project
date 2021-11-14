@@ -19,10 +19,16 @@ class Asking(object):
 	# input: a single sentence, with its dependency dict and root word
 	def binaryQ(self, sentence, root):
 		output = ''
+		seenRoot = False
 		if root in self.auxiliary_verbs:
 			output += root.capitalize() + ' '
 		for k in sentence.split():
-			if k != root:
+			if k == root:
+				seenRoot = True
+			if k != root and seenRoot == False:
+				if "," not in k:
+					output += k + ' '
+			if k != root and seenRoot:
 				output += k + ' '
 		output = output[:-2] + '?'
 		return output
@@ -38,6 +44,14 @@ class Asking(object):
 				# check if is a subject
 				names = k.split()
 				for n in names:
+					if "'" in n:
+						n = n.split("'")[0]
+					if "-" in n:
+						parts = n.split("-")
+						for part in parts:
+							if dependency_dict[part][0] == 'nsubj':
+								theName = k
+						continue
 					if dependency_dict[n][0] == 'nsubj':
 						theName = k
 		output = sentence.replace(theName, 'who')
@@ -58,6 +72,8 @@ class Asking(object):
 				theMoney = k
 		# check passive tense
 		sentence_lst = sentence.split()
+		if root not in sentence_lst:
+			return
 		root_ind = sentence_lst.index(root)
 		root_token = doc[root_ind]
 		if root_ind != 0:
@@ -69,6 +85,7 @@ class Asking(object):
 				for n in dependency_dict:
 					if dependency_dict[n][0] == 'nsubjpass':
 						theSubj = n
+				if theSubj == "": return
 				words_before_subj = dependency_dict[theSubj][-1]
 				if len(words_before_subj) != 0:
 					output += str(words_before_subj[0]).lower() + ' '
@@ -87,6 +104,7 @@ class Asking(object):
 					for n in dependency_dict:
 						if dependency_dict[n][0] == 'nsubj':
 							theSubj = str(n)
+					if theSubj == "": return
 					words_before_subj = dependency_dict[theSubj][-1]
 					if len(words_before_subj) != 0:
 						for t in words_before_subj:
@@ -214,6 +232,8 @@ class Asking(object):
 		output = ""
 		theObj = ""
 		sentence_lst = sentence.split()
+		if root not in sentence_lst:
+			return
 		root_ind = sentence_lst.index(root)
 		# check tense
 		tense = self.parser.check_tense(root, pos_tag_dict)
@@ -261,6 +281,8 @@ class Asking(object):
 
 				# check tense
 				tense = self.parser.check_tense(root, pos_tag_dict)
+				if tense == None:
+					return
 				# Get rid of things after because
 
 				# Why + do/does/did sb do sth?
@@ -355,6 +377,8 @@ class Asking(object):
 			if ner_tag_dict[k] == 'DATE' or ner_tag_dict[k] == 'TIME':
 				theDateTime = k
 		sentence_lst = sentence.split()
+		if root not in sentence_lst:
+			return
 		root_ind = sentence_lst.index(root)
 		root_token = doc[root_ind]
 		prep = ['in ', 'on ']
@@ -369,7 +393,9 @@ class Asking(object):
 			sentence = sentence.replace(root, theVerb)
 			sentence = re.sub('[^A-Za-z0-9]+', ' ', sentence)
 			sentence = sentence.lower()
-			tense = self.parser.check_tense(root_ind, pos_dict)
+			tense = self.parser.check_tense(root, pos_dict)
+			if tense == None:
+				return
 			output += tense + ' ' + sentence
 		else:
 			sentence = sentence.replace(theDateTime, '')
