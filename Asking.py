@@ -1,5 +1,3 @@
-import nltk
-from nltk.tokenize import sent_tokenize
 import spacy
 from nltk.stem import WordNetLemmatizer
 import re
@@ -10,51 +8,87 @@ class Asking(object):
 	def __init__(self, textFile):
 		self.nlp = spacy.load('en_core_web_sm')
 		self.lemmatizer = WordNetLemmatizer()
-		self.auxiliary_verbs = ["am", "is", "are", "was", "were", "shall", "do",
+		self.auxiliary_verbs = {"am", "is", "are", "was", "were", "shall", "do",
 								"does", "did","can", "could", "have", "need",
-								"should", "will", "would"]
+								"should", "will", "would"}
 		self.textFile = textFile
 		self.parser = Parser.Parser(self.textFile)
 
 	# input: a single sentence, with its dependency dict and root word
-	def binaryQ(self, sentence, root):
+	def binaryQ(self, sentence, ner_tag_dict, pos_tag_dict, nlp_doc, root):
 		output = ''
-		seenRoot = False
+		if root not in sentence:
+			return
+		split = sentence.split()
+		if root + "," in split:
+			rootInd = split.index(root + ',')
+		else:
+			rootInd = split.index(root)
+		ner_tags = set()
+		for ner_tag in ner_tag_dict:
+			split_tag = ner_tag.split()
+			for split_word in split_tag:
+				ner_tags.add(split_word)
 		if root in self.auxiliary_verbs:
 			output += root.capitalize() + ' '
-		for k in sentence.split():
-			if k == root:
-				seenRoot = True
-			if k != root and seenRoot == False:
-				if "," not in k:
-					output += k + ' '
-			if k != root and seenRoot:
-				output += k + ' '
-		output = output[:-2] + '?'
-		return output
+			for word in split[0:rootInd]:
+				if word not in ner_tags:
+					output += word.lower() + ' '
+				else:
+					output += word + ' '
+			output += " ".join(split[rootInd + 1:])
+			output = output[:-1] + '?'
+			return output
+		else:
+			aux_verb = ""
+			minDist = len(split)
+			for word in split:
+				if word in self.auxiliary_verbs:
+					if abs(split.index(word) - rootInd) < minDist:
+						minDist = split.index(word) - rootInd
+						aux_verb = word
+			if aux_verb != "":
+				output += aux_verb.capitalize() + ' '
+				auxInd = split.index(aux_verb)
+				output += " ".join(
+					split[0:auxInd])  # add everything before aux verb
+				output += " " + root + " "
+				output += " ".join(split[rootInd + 1:])
+			else:
+				# edge case where root and nearby words not in auxiliary verbs
+				tense = self.parser.check_tense(root, pos_tag_dict)
+				if tense == None: return
+				output += tense.capitalize() + ' '
+				output += " ".join(split[0:rootInd]) + ' '
+				output += self.parser.getTokenLemma(nlp_doc)[root] + ' '
+				output += " ".join(split[rootInd + 1:])
+			split_output = output.split()
+			if split_output[1] not in ner_tags:
+				output = split_output[0] + ' ' + split_output[1].lower() + \
+						 ' ' + " ".join(split_output[2:])
+			output = output[:-1] + '?'
+			return output
 
-	# input: a single sentence, and its ner tag dict and dependency dict
-	# Who Question
-	def whoQ(self, sentence, ner_tag_dict, dependency_dict):
+	def whoQ(self, sentence, ner_tag_dict, root):
 		# find PERSON tag
 		theName = ''
 		output = ''
-		for k in ner_tag_dict.keys():
-			if ner_tag_dict[k] == 'PERSON':
-				# check if is a subject
-				names = k.split()
-				for n in names:
-					if "'" in n:
-						n = n.split("'")[0]
-					if "-" in n:
-						parts = n.split("-")
-						for part in parts:
-							if dependency_dict[part][0] == 'nsubj':
-								theName = k
-						continue
-					if dependency_dict[n][0] == 'nsubj':
-						theName = k
-		output = sentence.replace(theName, 'who')
+		if root not in sentence:
+			return
+		rootInd = sentence.index(root)
+		minDist = len(sentence)
+		for ner_tag in ner_tag_dict:
+			if ner_tag_dict[ner_tag] == 'PERSON':
+				tag_ind = sentence.index(ner_tag)
+				if abs(tag_ind - rootInd) < minDist:
+					minDist = abs(tag_ind - rootInd)
+					theName = ner_tag
+		if theName == '':
+			return
+		if "'" in theName:
+			output = sentence.replace(theName, 'whose', 1)
+		else:
+			output = sentence.replace(theName, 'who', 1)
 		output = output[:-1] + "?"
 		output = output[0].upper() + output[1:]
 		return output
@@ -324,48 +358,47 @@ class Asking(object):
 		return output[:-2] + "?"
 
 	# what Question
-	def whatQ(self, sentence, dep_dict, root, pos_tags, lemmas):
-		aux_verbs = ["are", "is", "was", "were", "shall", "do", "does", "did",
+	def whatQ(self, sentence, dep_dict, root):
+		aux_verbs = {"are", "is", "was", "were", "shall", "do", "does", "did",
 					 "can", "could", "have", "need", "should", "will", "would",
-					 "must", "may", "might", "cannot"]
+					 "must", "may", "might", "cannot"}
 		output = ''
 		if root in aux_verbs:
 			output += f"What {root} "
 			seenRoot = False
 			for n in sentence.split():
-				if n == root:
+				if n == root or n == root + ',':
 					seenRoot = True
-				elif seenRoot:
+					continue
+				if seenRoot:
 					output += n + " "
 			return output[:-2] + "?"
 		else:
-			# pos_tags = self.parser.pos_tag_sentence(sentence)
-			# lemmas = self.parser.getTokenLemma(self.nlp(sentence))
-			verb_tense = self.parser.check_tense(root, pos_tags)
-			if verb_tense != None:
-				output += f"What {verb_tense} "
+			splitSentence = sentence.split()
+			if root in splitSentence:
+				rootInd = splitSentence.index(root)
+			elif root + ',' in splitSentence:
+				rootInd = splitSentence.index(root + ',')
 			else:
-				output += "What does "  # edge case (some verbs are not captured)
-			nsubj_word = None
-			for n in dep_dict:
-				if dep_dict[n][0] == "nsubj" and nsubj_word == None:
-					nsubj_word = n
-					# account for word dependencies before nominal subject
-					if dep_dict[n][3] != []:
-						for prev in dep_dict[n][3]:
-							output += str(prev).lower() + " "
-					output += f"{n} {lemmas[root]} "  # add root after nominal subject
-			post_root_nouns = []
-			for pos in pos_tags:
-				if pos != root and pos != nsubj_word:
-					if pos_tags[pos][0] == "NOUN" or pos_tags[pos][0] == "PROPN":
-						post_root_nouns.append(pos)
-						break
-			# add nouns/propositions after root
-			if len(post_root_nouns) == 1:
-				output += post_root_nouns[0] + " "
-			output = output[:-1] + "?"
-			return output
+				return
+			if rootInd != 0:
+				if splitSentence[rootInd - 1] in aux_verbs:
+					output += f'What {splitSentence[rootInd - 1]} {root} '
+					output += " ".join(splitSentence[rootInd + 1:])
+					return output[:-1] + "?"
+				elif rootInd >= 2 and splitSentence[rootInd - 1] == 'be' and \
+						splitSentence[rootInd - 2] in aux_verbs:
+					output += 'What '
+					output += " ".join(splitSentence[rootInd - 2:])
+					return output[:-1] + "?"
+				else:
+					# case where nsubj is before the root
+					for word in splitSentence[:rootInd + 1]:
+						if word in dep_dict and dep_dict[word][0] == 'nsubj':
+							output += 'What '
+							output += " ".join(splitSentence[rootInd:])
+							return output[:-1] + "?"
+			return
 
 	def whenQ(self, sentence, ner_tag_dict, root, doc, pos_dict):
 		# find DATE/TIME tag
