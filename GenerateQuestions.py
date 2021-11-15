@@ -80,11 +80,10 @@ class GenerateQuestions(object):
 			pos_tags = self.parser.pos_tag_sentence(sentence)
 			token_dict, root = self.parser.dependency_dict(nlp_doc)
 			ner_tags = self.parser.ner_tag_sentence(sentence)
-			lemma_dict = self.parser.getTokenLemma(nlp_doc)
 
 			type_dict = {"How many": self.asker.howManyQ(sentence, ner_tags,
 												token_dict, pos_tags, root),
-						 "Who": self.asker.whoQ(sentence, ner_tags, token_dict),
+						 "Who": self.asker.whoQ(sentence, ner_tags, root),
 						 "How much": self.asker.howMuchQ(sentence, nlp_doc, ner_tags,
 													  token_dict, root, pos_tags),
 						 "How often": self.asker.howOftenQ(sentence, ner_tags, token_dict,
@@ -92,8 +91,7 @@ class GenerateQuestions(object):
 						 "Why": self.asker.whyQ(sentence, nlp_doc, ner_tags, token_dict,
 											 pos_tags, root),
 						 "Where": self.asker.whereQ(sentence, token_dict, pos_tags),
-						 "What": self.asker.whatQ(sentence, token_dict, root, pos_tags,
-											   lemma_dict),
+						 "What": self.asker.whatQ(sentence, token_dict, root),
 						 "When": self.asker.whenQ(sentence, ner_tags, root, nlp_doc,
 											   pos_tags)}
 
@@ -111,10 +109,14 @@ class GenerateQuestions(object):
 					continue
 
 				# check if binary question is possible
-			binary_output = self.asker.binaryQ(sentence, root)
-			if self.isValidQuestion(binary_output):
-				print("BINARY Q: ", binary_output)
-				possible_questions.add(binary_output)
+			try:
+				binary_output = self.asker.binaryQ(sentence, ner_tags, pos_tags,
+											   nlp_doc, root)
+				if self.isValidQuestion(binary_output):
+					print("BINARY Q: ", binary_output)
+					possible_questions.add(binary_output)
+			except:
+				continue
 
 			# limit amount of questions to be generated
 			if len(possible_questions) >= limit:
