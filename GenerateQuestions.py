@@ -61,7 +61,8 @@ class GenerateQuestions(object):
 		if root in aux_verbs:
 			possible_types.add("What")
 		for dep in dep_dict.values():
-			if dep[0] == 'nsubj':
+			vals = {'nsubj', 'nsubjpass', 'auxpass'}
+			if dep[0] in vals:
 				possible_types.add("What")
 		return possible_types
 
@@ -102,10 +103,10 @@ class GenerateQuestions(object):
 				try:
 					question = type_dict[type]
 					if self.isValidQuestion(question):
-						print("VALID Q: ", question)
+						print(f"VALID Q: ({type})", question)
 						possible_questions.add(question)
 				except:
-					print("ERROR HERE")
+					print("ERROR HERE: ", type)
 					continue
 
 				# check if binary question is possible

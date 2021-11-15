@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25b5aad2-ebe7-4a61-a7df-9e3ab0244d73" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Asking.py" beforeDir="false" afterPath="$PROJECT_DIR$/Asking.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GenerateQuestions.py" beforeDir="false" afterPath="$PROJECT_DIR$/GenerateQuestions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/question_asking_where.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/question_asking_where.ipynb" afterDir="false" />
     </list>
@@ -15,7 +14,7 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/NLP_Project$Parser.coverage" NAME="Parser Coverage Results" MODIFIED="1636599224717" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NLP_Project$question_asking_what.coverage" NAME="question_asking_what Coverage Results" MODIFIED="1635385039351" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/NLP_Project$GenerateQuestions.coverage" NAME="GenerateQuestions Coverage Results" MODIFIED="1636922308093" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NLP_Project$GenerateQuestions.coverage" NAME="GenerateQuestions Coverage Results" MODIFIED="1637001211724" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="564332022">
@@ -50,24 +49,24 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="8051" />
+          <entry key="py" value="8163" />
           <entry key="txt" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="14" />
-          <entry key="Python" value="8051" />
+          <entry key="Python" value="8163" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Asking.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
+            <state relative-caret-position="-812">
               <caret line="21" column="32" lean-forward="true" selection-start-line="21" selection-start-column="32" selection-end-line="21" selection-end-column="32" />
               <folding>
                 <element signature="e#1#13#0" expanded="true" />
@@ -80,23 +79,23 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="266" selection-start-line="1" selection-start-column="60" selection-end-line="1" selection-end-column="266" />
+            <state relative-caret-position="180">
+              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/GenerateQuestions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="16" column="27" lean-forward="true" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
+            <state relative-caret-position="-366">
+              <caret line="66" column="29" lean-forward="true" selection-start-line="66" selection-start-column="29" selection-end-line="66" selection-end-column="29" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
-                <marker date="1637000484369" expanded="true" signature="68:69" ph="..." />
-                <marker date="1637000484369" expanded="true" signature="68:71" ph="..." />
-                <marker date="1637000484369" expanded="true" signature="401:1107" ph="..." />
-                <marker date="1637000484369" expanded="true" signature="4485:4488" ph="..." />
+                <marker date="1637001211709" expanded="true" signature="68:69" ph="..." />
+                <marker date="1637001211709" expanded="true" signature="68:71" ph="..." />
+                <marker date="1637001211709" expanded="true" signature="401:1107" ph="..." />
+                <marker date="1637001211709" expanded="true" signature="4543:4546" ph="..." />
               </folding>
             </state>
           </provider>
@@ -141,8 +140,8 @@
         <option value="$PROJECT_DIR$/question_asking_what.py" />
         <option value="$PROJECT_DIR$/Parser.py" />
         <option value="$PROJECT_DIR$/test.txt" />
-        <option value="$PROJECT_DIR$/GenerateQuestions.py" />
         <option value="$PROJECT_DIR$/Asking.py" />
+        <option value="$PROJECT_DIR$/GenerateQuestions.py" />
       </list>
     </option>
   </component>
@@ -311,7 +310,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3939759" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3939759" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -420,32 +419,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="266" selection-start-line="1" selection-start-column="60" selection-end-line="1" selection-end-column="266" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Asking.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="21" column="32" lean-forward="true" selection-start-line="21" selection-start-column="32" selection-end-line="21" selection-end-column="32" />
-          <folding>
-            <element signature="e#1#13#0" expanded="true" />
-            <marker date="1637000484357" expanded="true" signature="99:100" ph="..." />
-          </folding>
+        <state relative-caret-position="180">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/GenerateQuestions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="16" column="27" lean-forward="true" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
+        <state relative-caret-position="-366">
+          <caret line="66" column="29" lean-forward="true" selection-start-line="66" selection-start-column="29" selection-end-line="66" selection-end-column="29" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
-            <marker date="1637000484369" expanded="true" signature="68:69" ph="..." />
-            <marker date="1637000484369" expanded="true" signature="68:71" ph="..." />
-            <marker date="1637000484369" expanded="true" signature="401:1107" ph="..." />
-            <marker date="1637000484369" expanded="true" signature="4485:4488" ph="..." />
+            <marker date="1637001211709" expanded="true" signature="68:69" ph="..." />
+            <marker date="1637001211709" expanded="true" signature="68:71" ph="..." />
+            <marker date="1637001211709" expanded="true" signature="401:1107" ph="..." />
+            <marker date="1637001211709" expanded="true" signature="4543:4546" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Asking.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-812">
+          <caret line="21" column="32" lean-forward="true" selection-start-line="21" selection-start-column="32" selection-end-line="21" selection-end-column="32" />
+          <folding>
+            <element signature="e#1#13#0" expanded="true" />
+            <marker date="1637000484357" expanded="true" signature="99:100" ph="..." />
           </folding>
         </state>
       </provider>
