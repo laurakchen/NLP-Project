@@ -1,13 +1,17 @@
+#!/usr/bin/env python3
+
 import Asking, Parser
 import spacy
+import sys
 
 class GenerateQuestions(object):
 
-	def __init__(self):
-		textfile = "test.txt"
+	def __init__(self, textFile):
 		self.nlp = spacy.load('en_core_web_sm')
-		self.asker = Asking.Asking(textfile)
-		self.parser = Parser.Parser(textfile)
+		self.asker = Asking.Asking(textFile)
+		self.parser = Parser.Parser(textFile)
+
+	# add style check function (trim whitespace)
 
 	# Refine questions by deleting words of a sentence surrounded by commas or
 	# making them into their own sentence
@@ -69,14 +73,8 @@ class GenerateQuestions(object):
 	def generateQuestions(self, limit):
 		possible_questions = set()
 		for sentence in self.parser.text:
-			print("SENTENCE: ", sentence)
+			# print("SENTENCE: ", sentence)
 
-			nlp_doc = self.nlp(sentence)
-			token_dict, root = self.parser.dependency_dict(nlp_doc)
-			ner_tags = self.parser.ner_tag_sentence(sentence)
-			# redo NER tagging, POS tagging, etc after unnecessary commas removed
-			# sentence = self.splitCommas(sentence, root, ner_tags)
-			# print("NEW SENTENCE: ", sentence)
 			nlp_doc = self.nlp(sentence)
 			pos_tags = self.parser.pos_tag_sentence(sentence)
 			token_dict, root = self.parser.dependency_dict(nlp_doc)
@@ -103,10 +101,10 @@ class GenerateQuestions(object):
 				try:
 					question = type_dict[type]
 					if self.isValidQuestion(question):
-						print(f"VALID Q: ({type})", question)
+						# print(f"VALID Q: ({type})", question)
 						possible_questions.add(question)
 				except:
-					print("ERROR HERE: ", type)
+					# print("ERROR HERE: ", type)
 					continue
 
 				# check if binary question is possible
@@ -114,7 +112,7 @@ class GenerateQuestions(object):
 				binary_output = self.asker.binaryQ(sentence, ner_tags, pos_tags,
 											   nlp_doc, root)
 				if self.isValidQuestion(binary_output):
-					print("BINARY Q: ", binary_output)
+					# print("BINARY Q: ", binary_output)
 					possible_questions.add(binary_output)
 			except:
 				continue
@@ -128,5 +126,11 @@ class GenerateQuestions(object):
 	def isValidQuestion(self, question):
 		return question != None and len(question) > 0
 
-generator = GenerateQuestions()
-generator.generateQuestions(50)
+if __name__ == "__main__":
+	input_file = sys.argv[1]
+	N = int(sys.argv[2])
+
+	generator = GenerateQuestions(input_file)
+	questions = generator.generateQuestions(N)
+	for q in questions:
+		print(q)
