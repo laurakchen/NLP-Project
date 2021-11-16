@@ -11,8 +11,7 @@ class Asking(object):
 		self.auxiliary_verbs = {"am", "is", "are", "was", "were", "shall", "do",
 								"does", "did","can", "could", "have", "need",
 								"should", "will", "would"}
-		self.textFile = textFile
-		self.parser = Parser.Parser(self.textFile)
+		self.parser = Parser.Parser(textFile)
 
 	# input: a single sentence, with its dependency dict and root word
 	def binaryQ(self, sentence, ner_tag_dict, pos_tag_dict, nlp_doc, root):
@@ -150,7 +149,6 @@ class Asking(object):
 
 	def howManyQ(self, sentence, ner_tag_dict, dependency_dict, pos_tag_sentence,
 				 root):
-		# dependency_dict, root = self.parser.dependency_dict(self.nlp(sentence))
 		Number = ""
 		output = ""
 		clause = ""

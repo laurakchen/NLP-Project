@@ -1,7 +1,5 @@
-import nltk
 from nltk.tokenize import sent_tokenize
 import spacy
-import numpy as np
 
 class Parser(object):
 
@@ -14,7 +12,6 @@ class Parser(object):
 		text = []
 		with open(textFile, "r") as f:
 			for line in f:
-				print(line)
 				text = text + sent_tokenize(line)
 		return text
 
@@ -45,20 +42,6 @@ class Parser(object):
 				POS_tag_dict[token.text] = tags[0]
 		return POS_tag_dict
 
-	# def pos_tag_sentence(self, sentence):
-	# 	# list of sentences
-	# 	POS_tag_dict = dict()
-	# 	text = sentence.split()
-	# 	for i, line in enumerate(text):
-	# 		tags = []
-	# 		doc = self.nlp(str(line))
-	# 		for token in doc:
-	# 			tags.append((token.text, token.pos_, token.tag_, token.dep_,
-	# 						 token.is_stop,))
-	# 		if len(tags) != 0:
-	# 			POS_tag_dict[i] = tags
-	# 	return POS_tag_dict
-
 	# Token dict
 	def dependency_dict(self, doc):
 		out = dict()
@@ -76,9 +59,7 @@ class Parser(object):
 		for i, line in enumerate(text):
 			tags = []
 			doc = self.nlp(str(line))
-
 			for ent in doc.ents:
-				# print(ent.text +'-' + ent.label_ + '\n')
 				tags.append(ent.text + '-' + ent.label_)
 			if len(tags) != 0:
 				NER_tag_dict[i] = tags
@@ -87,9 +68,7 @@ class Parser(object):
 	def ner_tag_sentence(self, sentence):
 		doc = self.nlp(str(sentence))
 		NER_tag_dict = dict()
-		tags = []
 		for ent in doc.ents:
-			# print(ent.text +'-' + ent.label_ + '\n')
 			NER_tag_dict[ent.text] = ent.label_
 		return NER_tag_dict
 
