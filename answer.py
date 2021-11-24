@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 -W ignore::DeprecationWarning
+# -*- coding:utf8 -*-
 import sys
 import time
 import Answering, Parser
@@ -13,7 +14,6 @@ class GenerateAnswers(object):
 		self.parser = Parser.Parser(textfile)
 		self.text = self.parser.text
 		self.questions = self.read_questions(questions)
-		print("done with initializing")
 
 	def read_questions(self, questions):
 		question = []
@@ -37,7 +37,7 @@ class GenerateAnswers(object):
 
 	def displayAnswer(self, all_answer):
 		for answer in all_answer:
-			print(answer+"\n")
+			print(answer)
 
 if __name__ == "__main__":
 	input_file = sys.argv[1]

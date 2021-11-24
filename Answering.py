@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 -W ignore::DeprecationWarning
+# -*- coding:utf8 -*-
 import nltk
 from nltk.tokenize import sent_tokenize
 import spacy
@@ -6,7 +7,9 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from nltk.corpus import wordnet, stopwords
-from pattern.en import conjugate, lemma, lexeme,PRESENT,SG
+# import pattern3
+# from pattern.en import conjugate, lemma, lexeme,PRESENT,SG
+import en_core_web_sm
 import Parser
 from sentence_transformers import SentenceTransformer #BERT sentence embeddings
 
@@ -247,7 +250,8 @@ class Answering(object):
                 if question_list[1] == "does":
                     root = self.parser.dependency_dict(self.nlp(question))[1]
                     root_index = question_list.index(root)
-                    new_root = lexeme(root)[1]
+                    # new_root = lexeme(root)[1]
+                    new_root = root
                     question_list[root_index] = new_root
                     question_list.pop(0)
                     question_list.pop(0)
@@ -259,7 +263,8 @@ class Answering(object):
                 else:
                     root = self.parser.dependency_dict(self.nlp(question))[1]
                     root_index = question_list.index(root)
-                    new_root = lexeme(root)[3]
+                    # new_root = lexeme(root)[3]
+                    new_root = root
                     question_list[root_index] = new_root
                     question_list.pop(0)
                     question_list.pop(0)
@@ -288,7 +293,8 @@ class Answering(object):
                 if question_list[1] == "does":
                     root = self.parser.dependency_dict(self.nlp(question))[1]
                     root_index = question_list.index(root)
-                    new_root = lexeme(root)[1]
+                    #new_root = lexeme(root)[1]
+                    new_root = root
                     question_list[root_index] = new_root
                     question_list.pop(0)
                     question_list.pop(0)
@@ -300,7 +306,8 @@ class Answering(object):
                 else:
                     root = self.parser.dependency_dict(self.nlp(question))[1]
                     root_index = question_list.index(root)
-                    new_root = lexeme(root)[3]
+                    #new_root = lexeme(root)[3]
+                    new_root = root
                     question_list[root_index] = new_root
                     question_list.pop(0)
                     question_list.pop(0)

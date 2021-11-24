@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3 -W ignore::DeprecationWarning
+# -*- coding:utf8 -*-
 
 import Asking, Parser
 import spacy
