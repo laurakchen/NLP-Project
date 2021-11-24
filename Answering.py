@@ -3,7 +3,6 @@
 import nltk
 from nltk.tokenize import sent_tokenize
 import spacy
-from nltk.stem import WordNetLemmatizer 
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from nltk.corpus import wordnet, stopwords
@@ -20,8 +19,7 @@ from sentence_transformers import SentenceTransformer #BERT sentence embeddings
 
 class Answering(object):
     def __init__(self, textFile):
-        self.nlp = spacy.load('en_core_web_sm')
-        self.lemmatizer = WordNetLemmatizer()
+        self.nlp = en_core_web_sm.load()
         self.auxiliary_verbs = ["am", "is", "are", "was", "were", "shall", "do",
                                 "does", "did","can", "could", "have", "need",
                                 "should", "will", "would"]

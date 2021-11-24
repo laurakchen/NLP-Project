@@ -1,12 +1,14 @@
+#!/usr/bin/env python3
 import spacy
 from nltk.stem import WordNetLemmatizer
 import re
 import Parser
+import en_core_web_sm
 
 class Asking(object):
 
 	def __init__(self, textFile):
-		self.nlp = spacy.load('en_core_web_sm')
+		self.nlp = en_core_web_sm.load()
 		self.lemmatizer = WordNetLemmatizer()
 		self.auxiliary_verbs = {"am", "is", "are", "was", "were", "shall", "do",
 								"does", "did","can", "could", "have", "need",
@@ -112,6 +114,10 @@ class Asking(object):
 		if root_ind != 0:
 			word_in_front_of_root = sentence_lst[root_ind - 1]
 			# if it's passive tense
+			for item in '''!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~''':
+				if item in word_in_front_of_root:
+				    word_in_front_of_root = word_in_front_of_root[:-1]
+			if word_in_front_of_root not in dependency_dict: return
 			if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 				root_aux = word_in_front_of_root
 				output += 'How much ' + root_aux + ' '
@@ -156,11 +162,15 @@ class Asking(object):
 			if ner_tag_dict[k] == 'CARDINAL':
 				Number = k
 		if Number == "": return
+		if len(Number.split()) > 1: return
+		if Number.isnumeric(): return
 		sentence_lst = sentence.split()
 		for seg in sentence.split(',', 1):
 			if Number in seg: clause = seg
 		if root not in clause: return
 		clause_lst = clause.split()
+		if Number not in clause_lst: return
+		if root not in clause_lst: return
 		root_ind = clause_lst.index(root)
 		number_ind = clause_lst.index(Number)
 		if number_ind < root_ind:
@@ -169,6 +179,10 @@ class Asking(object):
 			if root_ind != 0:
 				word_in_front_of_root = sentence_lst[root_ind - 1]
 				# if it's passive tense
+				for item in '''!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~''':
+				    if item in word_in_front_of_root:
+				        word_in_front_of_root = word_in_front_of_root[:-1]
+				if word_in_front_of_root not in dependency_dict: return
 				if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 					middle = clause[clause.find(root): clause.find(Number)]
 					output = "How many" + clause.split(Number, 1)[1][
@@ -196,7 +210,7 @@ class Asking(object):
 		output = ' '.join(output.split()) + "?"
 		return output
 
-	def howOftenQ(self, sentence, ner_tag_dict, dependency_dict, pos_tag_sentence,
+	def howLongQ(self, sentence, ner_tag_dict, dependency_dict, pos_tag_sentence,
 				  root):
 		date = ""
 		output = ""
@@ -206,13 +220,20 @@ class Asking(object):
 			if ner_tag_dict[k] == 'DATE':
 				date = k
 		if date == "": return
+		if date.isnumeric(): return
+		if len(date.split()) > 1: return
 		date_lst = date.split()
 		sentence_lst = sentence.split()
+		if root not in sentence_lst: return
 		root_lst_ind = sentence_lst.index(root)
 		root_ind = sentence.index(root)
 		date_ind = sentence.index(date)
 		if date_ind < root_ind:
 			word_in_front_of_root = sentence_lst[root_lst_ind - 1]
+			for item in '''!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~''':
+				if item in word_in_front_of_root:
+				    word_in_front_of_root = word_in_front_of_root[:-1]
+			if word_in_front_of_root not in dependency_dict: return
 			if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 				sentence_lst[root_lst_ind - 1] = sentence_lst[root_lst_ind - 2]
 				sentence_lst[root_lst_ind - 2] = word_in_front_of_root
@@ -232,9 +253,13 @@ class Asking(object):
 				word_in_front_of_root = sentence_lst[root_lst_ind - 1]
 				word_after_root = sentence_lst[root_lst_ind + 1]
 				prep_ind = sentence.index(word_after_root)
-				if dependency_dict[word_after_root][
-					0] != 'prep': word_after_root = ""
+				if word_after_root not in dependency_dict: return
+				if dependency_dict[word_after_root][0] != 'prep': word_after_root = ""
 				# if it's passive tense
+				for item in '''!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~''':
+				    if item in word_in_front_of_root:
+				        word_in_front_of_root = word_in_front_of_root[:-1]
+				if word_in_front_of_root not in dependency_dict: return
 				if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 					output = "How long " + word_in_front_of_root + " " + \
 							 clause.split(word_in_front_of_root, 1)[
@@ -273,6 +298,10 @@ class Asking(object):
 		if "because" or "due to" or "Due to" in sentence:
 			# check if passive tense:
 			word_in_front_of_root = sentence_lst[root_ind - 1]
+			for item in '''!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~''':
+				if item in word_in_front_of_root:
+				    word_in_front_of_root = word_in_front_of_root[:-1]
+			if word_in_front_of_root not in dependency_dict: return
 			if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 				root_aux = word_in_front_of_root
 				for n in dependency_dict:
@@ -337,6 +366,7 @@ class Asking(object):
 				seenWhere = True
 				foundWhereInd = whereInd
 				verb = dep_dict[word][1]
+				if verb not in pos_tags: return
 				if pos_tags[verb][0] == 'VERB':
 					tense = self.parser.check_tense(verb, pos_tags)
 				elif verb in verbs:  # if tense is was, is, were
@@ -421,7 +451,7 @@ class Asking(object):
 			theVerb = root_token.lemma_
 			output = 'When '
 			sentence = sentence.replace(theDateTime, '')
-			sentence = sentence.replace(root, theVerb)
+			sentence = sentence.replace(root+" ", theVerb+" ")
 			sentence = re.sub('[^A-Za-z0-9]+', ' ', sentence)
 			sentence = sentence.lower()
 			tense = self.parser.check_tense(root, pos_dict)
@@ -432,9 +462,12 @@ class Asking(object):
 			sentence = sentence.replace(theDateTime, '')
 			sentence = sentence.replace(aux, '')
 			output = 'When ' + aux + ' ' + sentence
-			output = output.lower()
-		output = output[0].upper() + output[1:]
-		output = output.split(" ")
-		output = " ".join(output)
-		output = output[0:len(output) - 1] + "?"
+			# output = output.lower()
+		output = output[:-1]
+		output = ' '.join(output.split()) + "?"
+		# output = output[0].upper() + output[1:]
+		# output = output.split(" ")
+		# output = [x.strip() for x in output]
+		# output = " ".join(output)
+		# output = output[0:len(output) - 1] + "?"
 		return output

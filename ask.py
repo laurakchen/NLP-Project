@@ -4,11 +4,12 @@
 import Asking, Parser
 import spacy
 import sys
+import en_core_web_sm
 
 class GenerateQuestions(object):
 
 	def __init__(self, textFile):
-		self.nlp = spacy.load('en_core_web_sm')
+		self.nlp = en_core_web_sm.load()
 		self.asker = Asking.Asking(textFile)
 		self.parser = Parser.Parser(textFile)
 
@@ -53,10 +54,13 @@ class GenerateQuestions(object):
 		if ("MONEY" in ner_tag_dict.values()):
 			possible_types.add("How much")
 		if ("DATE" in ner_tag_dict.values()):
-			possible_types.add("How long")
+			for k in ner_tag_dict.keys():
+				if ner_tag_dict[k] == "DATE" and not k.isnumeric():
+					possible_types.add("How long")
 		if ("CARDINAL" in ner_tag_dict.values()):
-			possible_types.add("How many")
-			possible_types.add("How often")
+			for k in ner_tag_dict.keys():
+				if ner_tag_dict[k] == "CARDINAL" and not k.isnumeric():
+					possible_types.add("How many")
 		if ("because" in sentence) or ("due to" in sentence) or (
 				"Due to" in sentence) or ("since" in sentence):
 			possible_types.add("Why")
@@ -86,7 +90,7 @@ class GenerateQuestions(object):
 						 "Who": self.asker.whoQ(sentence, ner_tags, root),
 						 "How much": self.asker.howMuchQ(sentence, nlp_doc, ner_tags,
 													  token_dict, root, pos_tags),
-						 "How often": self.asker.howOftenQ(sentence, ner_tags, token_dict,
+						 "How long": self.asker.howLongQ(sentence, ner_tags, token_dict,
 														pos_tags, root),
 						 "Why": self.asker.whyQ(sentence, nlp_doc, ner_tags, token_dict,
 											 pos_tags, root),
@@ -98,12 +102,15 @@ class GenerateQuestions(object):
 			# generate question outputs
 			possible_types = self.checkSentenceType(sentence, token_dict,
 													ner_tags, root)
+			#print(sentence)
+			#print(possible_types)
 			for type in possible_types:
 				try:
 					question = type_dict[type]
 					if self.isValidQuestion(question):
 						# print(f"VALID Q: ({type})", question)
 						possible_questions.add(question)
+						if len(possible_questions) == limit: return possible_questions
 				except:
 					# print("ERROR HERE: ", type)
 					continue
@@ -115,6 +122,7 @@ class GenerateQuestions(object):
 				if self.isValidQuestion(binary_output):
 					# print("BINARY Q: ", binary_output)
 					possible_questions.add(binary_output)
+					if len(possible_questions) == limit: return possible_questions
 			except:
 				continue
 

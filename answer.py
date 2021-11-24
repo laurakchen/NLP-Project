@@ -5,11 +5,13 @@ import time
 import Answering, Parser
 import spacy
 from nltk.tokenize import sent_tokenize
+import en_core_web_sm
+
 
 class GenerateAnswers(object):
 
 	def __init__(self, textfile, questions):
-		self.nlp = spacy.load('en_core_web_sm')
+		self.nlp = spacy.load("en_core_web_sm")
 		self.answer = Answering.Answering(textfile)
 		self.parser = Parser.Parser(textfile)
 		self.text = self.parser.text
