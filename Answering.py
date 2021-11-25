@@ -1,5 +1,4 @@
-#!/usr/bin/env python3 -W ignore::DeprecationWarning
-# -*- coding:utf8 -*-
+#!/usr/bin/env python3
 import nltk
 from nltk.tokenize import sent_tokenize
 import spacy

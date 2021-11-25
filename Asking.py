@@ -16,7 +16,7 @@ class Asking(object):
 		self.parser = Parser.Parser(textFile)
 
 	# input: a single sentence, with its dependency dict and root word
-	def binaryQ(self, sentence, ner_tag_dict, pos_tag_dict, nlp_doc, root):
+	def binaryQ(self, sentence, ner_tag_dict, pos_tag_dict, nlp_doc, root, dep_dict):
 		output = ''
 		if root not in sentence:
 			return
@@ -59,8 +59,17 @@ class Asking(object):
 				# edge case where root and nearby words not in auxiliary verbs
 				tense = self.parser.check_tense(root, pos_tag_dict)
 				if tense == None: return
+				if tense == "done" and len(root) > 2 and root[-2:] == 'ed':
+					tense = "does"
 				output += tense.capitalize() + ' '
-				output += " ".join(split[0:rootInd]) + ' '
+				if "," in split[0]:
+					first = split[0]
+					if dep_dict[first[0:-1]][0] == 'advmod':
+						output += split[rootInd - 1] + ' '
+				elif dep_dict[split[0]][0] == 'advmod':
+					output += split[rootInd - 1] + ' '
+				else:
+					output += " ".join(split[0:rootInd]) + ' '
 				output += self.parser.getTokenLemma(nlp_doc)[root] + ' '
 				output += " ".join(split[rootInd + 1:])
 			split_output = output.split()
@@ -116,7 +125,7 @@ class Asking(object):
 			# if it's passive tense
 			for item in '''!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~''':
 				if item in word_in_front_of_root:
-				    word_in_front_of_root = word_in_front_of_root[:-1]
+					word_in_front_of_root = word_in_front_of_root[:-1]
 			if word_in_front_of_root not in dependency_dict: return
 			if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 				root_aux = word_in_front_of_root
@@ -180,8 +189,8 @@ class Asking(object):
 				word_in_front_of_root = sentence_lst[root_ind - 1]
 				# if it's passive tense
 				for item in '''!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~''':
-				    if item in word_in_front_of_root:
-				        word_in_front_of_root = word_in_front_of_root[:-1]
+					if item in word_in_front_of_root:
+						word_in_front_of_root = word_in_front_of_root[:-1]
 				if word_in_front_of_root not in dependency_dict: return
 				if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 					middle = clause[clause.find(root): clause.find(Number)]
@@ -232,7 +241,7 @@ class Asking(object):
 			word_in_front_of_root = sentence_lst[root_lst_ind - 1]
 			for item in '''!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~''':
 				if item in word_in_front_of_root:
-				    word_in_front_of_root = word_in_front_of_root[:-1]
+					word_in_front_of_root = word_in_front_of_root[:-1]
 			if word_in_front_of_root not in dependency_dict: return
 			if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 				sentence_lst[root_lst_ind - 1] = sentence_lst[root_lst_ind - 2]
@@ -257,8 +266,8 @@ class Asking(object):
 				if dependency_dict[word_after_root][0] != 'prep': word_after_root = ""
 				# if it's passive tense
 				for item in '''!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~''':
-				    if item in word_in_front_of_root:
-				        word_in_front_of_root = word_in_front_of_root[:-1]
+					if item in word_in_front_of_root:
+						word_in_front_of_root = word_in_front_of_root[:-1]
 				if word_in_front_of_root not in dependency_dict: return
 				if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 					output = "How long " + word_in_front_of_root + " " + \
@@ -300,7 +309,7 @@ class Asking(object):
 			word_in_front_of_root = sentence_lst[root_ind - 1]
 			for item in '''!"#$%&'()*+, -./:;<=>?@[\]^_`{|}~''':
 				if item in word_in_front_of_root:
-				    word_in_front_of_root = word_in_front_of_root[:-1]
+					word_in_front_of_root = word_in_front_of_root[:-1]
 			if word_in_front_of_root not in dependency_dict: return
 			if dependency_dict[word_in_front_of_root][0] == 'auxpass':
 				root_aux = word_in_front_of_root

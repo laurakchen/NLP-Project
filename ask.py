@@ -1,5 +1,4 @@
-#!/usr/bin/env python3 -W ignore::DeprecationWarning
-# -*- coding:utf8 -*-
+#!/usr/bin/env python3
 
 import Asking, Parser
 import spacy
@@ -118,7 +117,7 @@ class GenerateQuestions(object):
 				# check if binary question is possible
 			try:
 				binary_output = self.asker.binaryQ(sentence, ner_tags, pos_tags,
-											   nlp_doc, root)
+											   nlp_doc, root, token_dict)
 				if self.isValidQuestion(binary_output):
 					# print("BINARY Q: ", binary_output)
 					possible_questions.add(binary_output)
