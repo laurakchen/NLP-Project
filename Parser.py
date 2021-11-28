@@ -1,12 +1,13 @@
+#!/usr/bin/env python3
 import nltk
 from nltk.tokenize import sent_tokenize
 import spacy
-import numpy as np
+import en_core_web_sm
 
 class Parser(object):
 
 	def __init__(self, textFile):
-		self.nlp = spacy.load('en_core_web_sm')
+		self.nlp = en_core_web_sm.load()
 		# put entire text file into a list of sentences
 		self.text = self.get_text(textFile)
 
@@ -14,6 +15,10 @@ class Parser(object):
 		text = []
 		with open(textFile, "r") as f:
 			for line in f:
+				if len(line) > 100:
+					tmp_lst = line.split(",")
+					for list in tmp_lst:
+						text += sent_tokenize(list)
 				text = text + sent_tokenize(line)
 		return text
 
@@ -44,20 +49,6 @@ class Parser(object):
 				POS_tag_dict[token.text] = tags[0]
 		return POS_tag_dict
 
-	# def pos_tag_sentence(self, sentence):
-	# 	# list of sentences
-	# 	POS_tag_dict = dict()
-	# 	text = sentence.split()
-	# 	for i, line in enumerate(text):
-	# 		tags = []
-	# 		doc = self.nlp(str(line))
-	# 		for token in doc:
-	# 			tags.append((token.text, token.pos_, token.tag_, token.dep_,
-	# 						 token.is_stop,))
-	# 		if len(tags) != 0:
-	# 			POS_tag_dict[i] = tags
-	# 	return POS_tag_dict
-
 	# Token dict
 	def dependency_dict(self, doc):
 		out = dict()
@@ -75,9 +66,7 @@ class Parser(object):
 		for i, line in enumerate(text):
 			tags = []
 			doc = self.nlp(str(line))
-
 			for ent in doc.ents:
-				# print(ent.text +'-' + ent.label_ + '\n')
 				tags.append(ent.text + '-' + ent.label_)
 			if len(tags) != 0:
 				NER_tag_dict[i] = tags
@@ -86,9 +75,7 @@ class Parser(object):
 	def ner_tag_sentence(self, sentence):
 		doc = self.nlp(str(sentence))
 		NER_tag_dict = dict()
-		tags = []
 		for ent in doc.ents:
-			# print(ent.text +'-' + ent.label_ + '\n')
 			NER_tag_dict[ent.text] = ent.label_
 		return NER_tag_dict
 
@@ -116,3 +103,26 @@ class Parser(object):
 		for token in nlp_doc:
 			lemmas[str(token)] = token.lemma_
 		return lemmas
+	'''
+	return the correct style of a sentence:
+	first letter capitalized, only 1 space between each word
+	no space between final word and punctuation
+	lower-cased words without NER tags
+	'''
+	def check_style(self, sentence):
+		if len(sentence) <= 0:
+			return sentence
+		result = ""
+		if sentence[-1] == "?":
+			result = " ".join(sentence.split())
+		else:
+			if sentence[-1] in ".!() ":
+				sentence = sentence[:-1]
+			result = " ".join(sentence.split()) + "?"
+		result = result[0].upper() + result[1:]
+		return result
+
+
+
+
+
