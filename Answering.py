@@ -5,8 +5,6 @@ import spacy
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from nltk.corpus import wordnet, stopwords
-# import pattern3
-# from pattern.en import conjugate, lemma, lexeme,PRESENT,SG
 import en_core_web_sm
 import Parser
 from sentence_transformers import SentenceTransformer #BERT sentence embeddings
@@ -356,108 +354,6 @@ class Answering(object):
     def check_binary_question(self, question):
         start = question.split(" ")[0]
         return start.lower() in self.auxiliary_verbs
-
-
-# gAnswer = GenerateAnswers("data/set4/a7.txt")
-
-
-# ## Test case:
-
-# # Binary
-# question1 = "Is Harry Potter and the Prisoner of Azkaban a a 2004 fantasy film directed by Alfonso Cuarón and distributed by Warner Bros?"
-# answer1 = gAnswer.binary_answer(question1)
-# print(answer1)
-# print(gAnswer.get_answer(answer1, question1))
-
-# # In[41]:
-
-
-# # Who
-# question2 = "Who has been spending another unhappy summer at Privet Drive?"
-# answer2 = gAnswer.get_answer_from_text(question2)
-# print(answer2)
-# print(gAnswer.get_answer(answer2, question2))
-
-
-# # In[42]:
-
-
-# # When
-# question3 = "When was the film released in United Kingdom?"
-# answer3 = gAnswer.get_answer_from_text(question3)
-# print(answer3)
-# print(gAnswer.get_answer(answer3, question3))
-
-
-# # In[43]:
-
-
-# # What
-# question4 = "What is found ruined and empty?"
-# answer4 = gAnswer.get_answer_from_text(question4)
-# print(answer4)
-# print(gAnswer.get_answer(answer4, question4))
-
-
-# # In[44]:
-
-
-# # Where
-# question5 = "Where is Harry forgiven by Minister of Magic Cornelius Fudge for using magic outside of Hogwarts?"
-# answer5 = gAnswer.get_answer_from_text(question5)
-# print(answer5)
-# print(gAnswer.get_answer(answer5, question5))
-
-
-# # In[45]:
-
-
-# # Where
-# question5 = "Where was the film released on 31 May 2004?"
-# answer5 = gAnswer.get_answer_from_text(question5)
-# print(answer5)
-# print(gAnswer.get_answer(answer5, question5))
-
-
-# # In[46]:
-
-
-# # Why
-# question6 = "Why did Oldman accept the part?"
-# answer6 = gAnswer.get_answer_from_text(question6)
-# print(answer6)
-# print(gAnswer.get_answer(answer6, question6))
-
-
-# # In[47]:
-
-
-# # How much
-# question7 = "How much did the Prisoner of Azkaban grossed a total of worldwide?"
-# answer7 = gAnswer.get_answer_from_text(question7)
-# print(answer7)
-# print(gAnswer.get_answer(answer7, question7))
-
-
-# # In[48]:
-
-
-# # How many
-# question8 = "How many Academy Awards was the film nominated for?"
-# answer8 = gAnswer.get_answer_from_text(question8)
-# print(answer8)
-# print(gAnswer.get_answer(answer8, question8))
-
-
-# # In[49]:
-
-
-# # How long
-# question9 = "How long after Harris's death, did Cuaron choose Gambon as his replacement?"
-# answer9 = gAnswer.get_answer_from_text(question9)
-# print(answer9)
-# print(gAnswer.get_answer(answer9, question9))
-
 
 
 

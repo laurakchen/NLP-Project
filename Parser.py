@@ -4,6 +4,7 @@ from nltk.tokenize import sent_tokenize
 import spacy
 import en_core_web_sm
 
+
 class Parser(object):
 
 	def __init__(self, textFile):
@@ -115,9 +116,10 @@ class Parser(object):
 		result = ""
 		if sentence[-1] == "?":
 			result = " ".join(sentence.split())
-		else:
-			if sentence[-1] in ".!() ":
-				sentence = sentence[:-1]
+		while (sentence[-1] in ".!"):
+			sentence= sentence[:-1]
+		if sentence[-1] != '?':
+			sentence = sentence.strip()
 			result = " ".join(sentence.split()) + "?"
 		result = result[0].upper() + result[1:]
 		return result

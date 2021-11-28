@@ -4,6 +4,7 @@ from nltk.stem import WordNetLemmatizer
 import re
 import Parser
 import en_core_web_sm
+from sentence_transformers import SentenceTransformer #BERT sentence embeddings
 
 class Asking(object):
 
@@ -14,7 +15,8 @@ class Asking(object):
 								"does", "did","can", "could", "have", "need",
 								"should", "will", "would"}
 		self.parser = Parser.Parser(textFile)
-
+		self.sbert_model = SentenceTransformer('bert-base-nli-mean-tokens')
+		
 	# input: a single sentence, with its dependency dict and root word
 	def binaryQ(self, sentence, ner_tag_dict, pos_tag_dict, nlp_doc, root, dep_dict):
 		output = ''
@@ -38,8 +40,7 @@ class Asking(object):
 				else:
 					output += word + ' '
 			output += " ".join(split[rootInd + 1:])
-			output = output[:-1] + '?'
-			return output
+			return self.parser.check_style(output)
 		else:
 			aux_verb = ""
 			minDist = len(split)
@@ -76,7 +77,7 @@ class Asking(object):
 			if split_output[1] not in ner_tags:
 				output = split_output[0] + ' ' + split_output[1].lower() + \
 						 ' ' + " ".join(split_output[2:])
-			output = output[:-1] + '?'
+			# output = output[:-1] + '?'
 			return self.parser.check_style(output)
 
 	def whoQ(self, sentence, ner_tag_dict, root):
@@ -99,8 +100,8 @@ class Asking(object):
 			output = sentence.replace(theName, 'whose', 1)
 		else:
 			output = sentence.replace(theName, 'who', 1)
-		output = output[:-1] + "?"
-		output = output[0].upper() + output[1:]
+		# output = output[:-1] + "?"
+		# output = output[0].upper() + output[1:]
 		return self.parser.check_style(output)
 
 	# input: a single sentence, and its ner tag dict and dependency dict
@@ -171,7 +172,7 @@ class Asking(object):
 					output += theSubj + ' ' + root_token.lemma_ + "?"
 				else:
 					return None
-		return (root,self.parser.check_style(output))
+		return self.parser.check_style(output)
 
 	def howManyQ(self, sentence, ner_tag_dict, dependency_dict, pos_tag_sentence,
 				 root):
@@ -296,6 +297,8 @@ class Asking(object):
 		if root not in sentence_lst: return
 		root_lst_ind = sentence_lst.index(root)
 		root_ind = sentence.index(root)
+		if date not in sentence:
+			return
 		date_ind = sentence.index(date)
 		if date_ind < root_ind:
 			word_in_front_of_root = sentence_lst[root_lst_ind - 1]
@@ -349,7 +352,7 @@ class Asking(object):
 															   root_ind + len(
 																   root):prep_ind + len(
 																   word_after_root)]
-		output = ' '.join(output.split()) + "?"
+		# output = ' '.join(output.split()) + "?"
 		return self.parser.check_style(output)
 
 	def whyQ(self, sentence, doc, ner_tag_dict, dependency_dict, pos_tag_dict, root):
@@ -470,7 +473,7 @@ class Asking(object):
 					continue
 				if seenRoot:
 					output += n + " "
-			return output[:-2] + "?"
+			return self.parser.check_style(output[:-1])
 		else:
 			splitSentence = sentence.split()
 			if root in splitSentence:
@@ -483,19 +486,19 @@ class Asking(object):
 				if splitSentence[rootInd - 1] in aux_verbs:
 					output += f'What {splitSentence[rootInd - 1]} {root} '
 					output += " ".join(splitSentence[rootInd + 1:])
-					return self.parser.check_style(output[:-1] + "?")
+					return self.parser.check_style(output)
 				elif rootInd >= 2 and splitSentence[rootInd - 1] == 'be' and \
 						splitSentence[rootInd - 2] in aux_verbs:
 					output += 'What '
 					output += " ".join(splitSentence[rootInd - 2:])
-					return self.parser.check_style(output[:-1] + "?")
+					return self.parser.check_style(output)
 				else:
 					# case where nsubj is before the root
 					for word in splitSentence[:rootInd + 1]:
 						if word in dep_dict and dep_dict[word][0] == 'nsubj':
 							output += 'What '
 							output += " ".join(splitSentence[rootInd:])
-							return self.parser.check_style(output[:-1] + "?")
+							return self.parser.check_style(output)
 			return
 	#when question
 	def whenQ(self, sentence, ner_tag_dict, root, doc, pos_dict):
@@ -545,5 +548,5 @@ class Asking(object):
 			else:
 				for n in range(root_ind, len(sentence_lst)-1):
 					output += sentence_lst[n] + " "
-			return self.parser.check_style(output[:-1] + "?")
+			return self.parser.check_style(output)
 
