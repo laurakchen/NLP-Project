@@ -71,8 +71,8 @@ class QuestionScorer(object):
 
         self.score = total_score
 
-    def check_score(self):
-        return self.score > 0
+    def check_score(self, score):
+        return score > 0
 
 
 

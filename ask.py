@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import Asking, Parser
+import Asking, Parser, QuestionScorer
 import spacy
 import sys
 import en_core_web_sm
@@ -11,6 +11,7 @@ class GenerateQuestions(object):
 		self.nlp = en_core_web_sm.load()
 		self.asker = Asking.Asking(textFile)
 		self.parser = Parser.Parser(textFile)
+		self.scorer = QuestionScorer.QuestionScorer()
 
 	# add style check function (trim whitespace)
 
@@ -76,6 +77,7 @@ class GenerateQuestions(object):
 
 	def generateQuestions(self, limit):
 		possible_questions = set()
+		good_set, bad_set = set(), set()
 		for sentence in self.parser.text:
 			# print("SENTENCE: ", sentence)
 
@@ -108,8 +110,14 @@ class GenerateQuestions(object):
 					question = type_dict[type]
 					if self.isValidQuestion(question):
 						# print(f"VALID Q: ({type})", question)
-						possible_questions.add(question)
-						if len(possible_questions) == limit: return possible_questions
+						# possible_questions.add(question)
+						q_score = self.scorer.score(question)
+						if self.scorer.check_score(q_score):
+							good_set.add(question)
+						else:
+							bad_set.add(question)
+						if len(good_set) == limit: 
+							return good_set, bad_set
 				except:
 					# print("ERROR HERE: ", type)
 					continue
@@ -120,15 +128,21 @@ class GenerateQuestions(object):
 											   nlp_doc, root, token_dict)
 				if self.isValidQuestion(binary_output):
 					# print("BINARY Q: ", binary_output)
-					possible_questions.add(binary_output)
-					if len(possible_questions) == limit: return possible_questions
+					# possible_questions.add(binary_output)
+					binary_score = self.scorer.score(binary_output)
+					if self.scorer.check_score(binary_score):
+						good_set.add(binary_output)
+					else:
+						bad_set.add(binary_output)
+					if len(good_set) == limit: 
+						return good_set, bad_set
 			except:
 				continue
 
 			# limit amount of questions to be generated
-			if len(possible_questions) >= limit:
-				return possible_questions
-		return possible_questions
+			if len(good_set) >= limit:
+				return good_set, bad_set
+		return good_set, bad_set
 
 	# check if generated question is valid
 	def isValidQuestion(self, question):
@@ -139,6 +153,18 @@ if __name__ == "__main__":
 	N = int(sys.argv[2])
 
 	generator = GenerateQuestions(input_file)
-	questions = generator.generateQuestions(N)
-	for q in questions:
-		print(q)
+	good_set, bad_set = generator.generateQuestions(N)
+	if len(good_set) == N:
+		for q in good_set:
+			print(q)
+	else:
+		# output all good questions and enough bad questions to fulfill limit
+		for q in good_set:
+			print(q)
+		remaining = N - len(good_set)
+		counter = 0
+		for bad_q in bad_set:
+			if counter == remaining:
+				break
+			print(bad_q)
+			counter += 1
