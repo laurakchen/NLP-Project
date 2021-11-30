@@ -4,6 +4,7 @@ import Asking, Parser, QuestionScorer
 import spacy
 import sys
 import en_core_web_sm
+import operator
 
 class GenerateQuestions(object):
 
@@ -77,7 +78,7 @@ class GenerateQuestions(object):
 
 	def generateQuestions(self, limit):
 		possible_questions = set()
-		good_set, bad_set = set(), set()
+		good_set, bad_set = set(), dict()
 		for sentence in self.parser.text:
 			# print("SENTENCE: ", sentence)
 
@@ -112,11 +113,13 @@ class GenerateQuestions(object):
 						# print(f"VALID Q: ({type})", question)
 						# possible_questions.add(question)
 						q_score = self.scorer.score(question)
+						# print("line116, ", q_score)
 						if self.scorer.check_score(q_score):
 							good_set.add(question)
 						else:
-							bad_set.add(question)
+							bad_set[question] = q_score
 						if len(good_set) == limit: 
+							# print("line 121", good_set)
 							return good_set, bad_set
 				except:
 					# print("ERROR HERE: ", type)
@@ -133,9 +136,10 @@ class GenerateQuestions(object):
 					if self.scorer.check_score(binary_score):
 						good_set.add(binary_output)
 					else:
-						bad_set.add(binary_output)
+						bad_set[question] = q_score
 					if len(good_set) == limit: 
 						return good_set, bad_set
+						# print("line 121", good_set)
 			except:
 				continue
 
@@ -163,8 +167,14 @@ if __name__ == "__main__":
 			print(q)
 		remaining = N - len(good_set)
 		counter = 0
-		for bad_q in bad_set:
+		#Rearrange the order of questions in bad set 
+		# bad_dict = OrderedDict(sorted(bad_set.items(), key=lambda t: t[1]))
+		bad_dict = dict(sorted(bad_set.items(), key=operator.itemgetter(1),reverse=True))
+		for bad_q in bad_dict.keys():
 			if counter == remaining:
 				break
 			print(bad_q)
 			counter += 1
+		if remaining - len(bad_set) > 0:
+			for i in range(remaining - len(bad_set)):
+				print("Question Limit Exceeded")
