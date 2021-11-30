@@ -175,3 +175,6 @@ if __name__ == "__main__":
 				break
 			print(bad_q)
 			counter += 1
+		if remaining - len(bad_set) > 0:
+			for i in range(remaining - len(bad_set)):
+				print("Question Limit Exceeded")
